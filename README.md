@@ -3,7 +3,8 @@ This project is capstone project about Snort with ELK on Docker. It's based on m
 
 # Environment
 **Snort**:CentOS 7
- lan3: 192.168.4.1
+ lan1: 192.168.3.1
+ lan2: 192.168.4.1
 **Logserver**:Ubuntu 18.04
  lan1: 192.168.4.2
  
@@ -15,7 +16,31 @@ This project is capstone project about Snort with ELK on Docker. It's based on m
 - Filebeat (7.1.1)
 - Kibana (7.1.1)
 # 2.Install Snort
+Change some configure in snort.lua (/etc/snort/etc/snort/snort.lua).
+```
+appid =
+{
+    log_stats = true,
+    app_detector_dir = 'ODP'
+}
 
+alert_json =
+{
+    fields = 'timestamp pkt_num proto pkt_gen pkt_len dir src_addr src_port dst_addr dst_port service rule priority class action b64_data'
+}
+```
+**ODP** is the path where you installed Open App ID.  Note this path does not include the trailing /odp.
+**Run Snort**
+```
+INSTALL/bin/snort \
+-c INSTALL/etc/snort/snort.lua \
+-R RULES/snort3-community.rules \
+--plugin-path INSTALL/lib64 \ 
+-i lan1 \
+-A json -y -q > alerts.json
+```
+**INSTALL** is the install prefix you used when configuring your Snort 3.0 build.
+**RULES** is the path containing the community rules.
 # 3.Install Docker
 I use Docker-ce version which is enough to use for this project.
 https://docs.docker.com/install/
