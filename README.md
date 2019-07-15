@@ -10,7 +10,6 @@ This project is capstone project about Snort with ELK on Docker. It's based on m
  
 # 1.Tools use in this project:
 - Snort (3.0)
-- OpenAppID
 - Elasticsearch (7.1.1)
 - Logstash (7.1.1)
 - Filebeat (7.1.1)
@@ -18,12 +17,6 @@ This project is capstone project about Snort with ELK on Docker. It's based on m
 # 2.Install Snort
 Change some configure in snort.lua (/etc/snort/etc/snort/snort.lua).
 ```
-appid =
-{
-    log_stats = true,
-    app_detector_dir = 'ODP'
-}
-
 alert_json =
 {
     fields = 'timestamp pkt_num proto pkt_gen pkt_len dir src_addr src_port dst_addr dst_port service rule priority class action b64_data'
