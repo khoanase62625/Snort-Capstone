@@ -1,0 +1,46 @@
+version: '2.2'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.1.1
+    container_name: elasticsearch
+    environment:
+      - "ES_JAVA_OPTS: -Xms512m -Xmx512m"
+      - ELASTIC_PASSWORD=abc@123
+    volumes:
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml:ro
+    ports:
+      - 9200:9200
+    networks:
+      - esnet
+    restart: always
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.1.1
+    container_name: logstash
+    environment:
+      - "LS_JAVA_OPTS: -Xms512m -Xmx512m"
+    ports:
+      - 5044:5044
+    volumes:
+      - ./logstash/snort_json.yml:/usr/share/logstash/snort_json.yml:ro
+      - ./logstash/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+      - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
+    networks:
+      - esnet
+    restart: always
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.1.1
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    volumes:
+      - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+    networks:
+      - esnet
+    restart: always
+
+networks:
+  esnet:
