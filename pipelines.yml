@@ -1,2 +1,0 @@
-- pipeline.id: snort
-  path.config: "/usr/share/logstash/snort_config/*.txt"
